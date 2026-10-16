@@ -6,8 +6,8 @@ from django.shortcuts import get_object_or_404
 from django.utils.dateparse import parse_datetime
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.request import Request
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from apps.accounts.permissions import IsEmailVerified

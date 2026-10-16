@@ -21,10 +21,10 @@ def get_user_from_token(raw_token: str):
         token = AccessToken(raw_token)
     except TokenError:
         return AnonymousUser()
-    User = get_user_model()
+    user_model = get_user_model()
     try:
-        return User.objects.get(pk=token["user_id"], is_active=True)
-    except (User.DoesNotExist, KeyError, ValueError):
+        return user_model.objects.get(pk=token["user_id"], is_active=True)
+    except (user_model.DoesNotExist, KeyError, ValueError):
         return AnonymousUser()
 
 

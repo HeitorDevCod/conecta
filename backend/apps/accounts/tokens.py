@@ -27,8 +27,8 @@ def read_email_token(token: str):
         data = signing.loads(token, salt=EMAIL_SALT, max_age=settings.EMAIL_VERIFICATION_MAX_AGE)
     except signing.BadSignature:  # inclui SignatureExpired
         return None
-    User = get_user_model()
-    user = User.objects.filter(pk=data.get("uid"), is_active=True).first()
+    user_model = get_user_model()
+    user = user_model.objects.filter(pk=data.get("uid"), is_active=True).first()
     if user is None or user.email != data.get("email"):
         return None
     return user
@@ -39,10 +39,10 @@ def make_reset_params(user) -> tuple[str, str]:
 
 
 def read_reset_params(uid: str, token: str):
-    User = get_user_model()
+    user_model = get_user_model()
     try:
         pk = force_str(urlsafe_base64_decode(uid))
-        user = User.objects.get(pk=pk, is_active=True)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = user_model.objects.get(pk=pk, is_active=True)
+    except (TypeError, ValueError, OverflowError, user_model.DoesNotExist):
         return None
     return user if default_token_generator.check_token(user, token) else None
