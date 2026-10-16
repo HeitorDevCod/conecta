@@ -1,0 +1,75 @@
+<header class="topbar">
+  <a class="brand" routerLink="/salas">
+    <span class="brand__mark"><app-icon name="chat" [size]="20" /></span>
+    conecta
+  </a>
+  @if (auth.user(); as user) {
+    <div class="me">
+      <app-avatar [name]="user.displayName" [color]="user.avatarColor" [size]="36" />
+      <span class="me__name">{{ user.displayName }}</span>
+      <button appBtn="ghost" size="sm" type="button" [confetti]="false" (click)="auth.logout()">
+        <app-icon name="logout" [size]="16" /> Sair
+      </button>
+    </div>
+  }
+</header>
+
+<main class="layout">
+  <section class="intro">
+    <h1>Escolha uma <span class="hl">sala</span><br />e comece a falar.</h1>
+    <input
+      class="input search"
+      type="search"
+      placeholder="Buscar salas…"
+      aria-label="Buscar salas"
+      (input)="onSearch($event)"
+    />
+  </section>
+
+  <form class="card create" [formGroup]="form" (ngSubmit)="create()">
+    <h2><app-icon name="plus" [size]="22" /> Nova sala</h2>
+    <label class="field">
+      <span>Nome</span>
+      <input class="input" formControlName="name" placeholder="Ex.: Squad Mobile" maxlength="60" />
+    </label>
+    <label class="field">
+      <span>Descrição</span>
+      <input class="input" formControlName="description" placeholder="Sobre o que vocês conversam?" maxlength="200" />
+    </label>
+    <fieldset class="swatches">
+      <legend>Cor</legend>
+      @for (color of colors; track color) {
+        <label class="swatch" [style.--swatch]="color">
+          <input type="radio" formControlName="color" [value]="color" />
+          <span class="sr-only">{{ color }}</span>
+        </label>
+      }
+    </fieldset>
+    <button appBtn="pink" type="submit" [disabled]="creating()">
+      <app-icon name="sparkle" [size]="18" />
+      {{ creating() ? 'Criando…' : 'Criar e entrar' }}
+    </button>
+  </form>
+
+  <section class="grid" aria-live="polite">
+    @if (loading()) {
+      @for (skeleton of [1, 2, 3]; track skeleton) {
+        <div class="room room--skeleton"></div>
+      }
+    } @else {
+      @for (room of filtered(); track room.id; let index = $index) {
+        <a class="room" [routerLink]="['/salas', room.slug]" [style.--room]="room.color" [style.--i]="index">
+          <span class="room__tag"><app-icon name="hash" [size]="16" />{{ room.slug }}</span>
+          <h3>{{ room.name }}</h3>
+          <p>{{ room.description || 'Sem descrição — entre e defina o clima.' }}</p>
+          <footer>
+            <span><app-icon name="users" [size]="16" /> {{ room.memberCount }}</span>
+            <span class="room__cta">{{ room.isMember ? 'Abrir' : 'Participar' }} →</span>
+          </footer>
+        </a>
+      } @empty {
+        <p class="empty">Nenhuma sala por aqui ainda. Crie a primeira ao lado!</p>
+      }
+    }
+  </section>
+</main>

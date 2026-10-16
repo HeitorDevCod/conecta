@@ -1,0 +1,269 @@
+/* ==========================================================================
+   Conecta — tema "neon brutal": cores vivas, contornos escuros e sombras sólidas.
+   ========================================================================== */
+
+:root {
+  --bg: #0d0820;
+  --bg-2: #140c2e;
+  --surface: #1b1238;
+  --surface-2: #261a4d;
+  --line: #3a2b6e;
+  --text: #f7f3ff;
+  --muted: #b3a8d9;
+  --ink: #120a26;
+
+  --pink: #ff2e88;
+  --cyan: #00e5ff;
+  --lime: #b6ff00;
+  --orange: #ff8a00;
+  --violet: #8b5cf6;
+  --yellow: #ffd60a;
+  --mint: #00f5a0;
+
+  --radius: 18px;
+  --radius-lg: 28px;
+  --font-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --ease-spring: cubic-bezier(0.2, 1.4, 0.4, 1);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-block-size: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 400 15px/1.5 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  margin: 0;
+}
+
+a {
+  color: var(--cyan);
+}
+
+::selection {
+  background: var(--lime);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------------- botões */
+
+.btn {
+  --btn-bg: var(--pink);
+  --btn-fg: var(--ink);
+  --btn-shadow: var(--ink);
+  --lift: 0px;
+  --depth: 5px;
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font: 700 15px/1 var(--font-display);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: var(--depth) var(--depth) 0 var(--btn-shadow);
+  transform: translate(calc(var(--lift) * -1), calc(var(--lift) * -1));
+  transition:
+    transform 0.18s var(--ease-spring),
+    box-shadow 0.18s var(--ease-spring),
+    filter 0.2s;
+
+  /* brilho que atravessa o botão no hover */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.6s ease;
+  }
+
+  &:hover:not(:disabled) {
+    --lift: 2px;
+    --depth: 7px;
+    &::before {
+      transform: translateX(120%);
+    }
+  }
+
+  &:active:not(:disabled) {
+    --lift: -4px;
+    --depth: 1px;
+    transition-duration: 0.06s;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    filter: grayscale(0.7) brightness(0.7);
+  }
+}
+
+.btn--pink { --btn-bg: var(--pink); --btn-fg: #fff; }
+.btn--cyan { --btn-bg: var(--cyan); }
+.btn--lime { --btn-bg: var(--lime); }
+.btn--orange { --btn-bg: var(--orange); }
+.btn--violet { --btn-bg: var(--violet); --btn-fg: #fff; }
+.btn--danger { --btn-bg: #ff3b3b; --btn-fg: #fff; }
+.btn--ghost {
+  --btn-bg: var(--surface-2);
+  --btn-fg: var(--text);
+  --btn-shadow: #07030f;
+  border-color: var(--line);
+}
+
+.btn--sm { padding: 8px 14px; font-size: 13px; --depth: 3px; }
+.btn--lg { padding: 16px 30px; font-size: 17px; }
+.btn--icon {
+  inline-size: 52px;
+  block-size: 52px;
+  padding: 0;
+  border-radius: 18px;
+}
+
+/* estado ligado (ex.: microfone ativo, legenda ativa) */
+.btn--active {
+  outline: 3px solid var(--lime);
+  outline-offset: 3px;
+}
+
+.btn__ripple {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.45);
+  transform: scale(0);
+  pointer-events: none;
+  animation: ripple 0.6s ease-out forwards;
+}
+
+.btn-confetti {
+  position: fixed;
+  z-index: 100;
+  inline-size: 8px;
+  block-size: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: confetti 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes confetti {
+  to {
+    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.85) translateY(10px);
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------- formulários */
+
+.field {
+  display: grid;
+  gap: 6px;
+
+  > span {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+}
+
+.input {
+  inline-size: 100%;
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 2.5px solid var(--line);
+  background: var(--bg-2);
+  color: var(--text);
+  font: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder {
+    color: #6f6596;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 4px 4px 0 var(--cyan);
+  }
+}
+
+.card {
+  background: var(--surface);
+  border: 2.5px solid var(--ink);
+  border-radius: var(--radius-lg);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,199 @@
+@if (session.loadError(); as error) {
+  <main class="failure card">
+    <span class="failure__emoji">🛸</span>
+    <h1>Ops, sala fora de órbita.</h1>
+    <p>{{ error }}</p>
+    <a appBtn="cyan" routerLink="/salas">Voltar para as salas</a>
+  </main>
+} @else {
+  @let room = session.room();
+  <header class="bar" [style.--room]="room?.color ?? 'var(--pink)'">
+    <a appBtn="ghost" size="icon" routerLink="/salas" aria-label="Voltar" [confetti]="false">
+      <app-icon name="back" />
+    </a>
+    <div class="title">
+      <h1><span class="hash">#</span>{{ room?.name ?? 'Carregando…' }}</h1>
+      @if (room?.description) {
+        <p>{{ room?.description }}</p>
+      }
+    </div>
+
+    <div class="online" aria-label="Pessoas online">
+      @for (peer of session.onlineUsers().slice(0, 5); track peer.userId) {
+        <app-avatar
+          [name]="peer.displayName"
+          [color]="peer.avatarColor"
+          [size]="34"
+          [speaking]="call.speaking().has(peer.peerId)"
+        />
+      }
+      @if (session.onlineUsers().length > 5) {
+        <span class="more">+{{ session.onlineUsers().length - 5 }}</span>
+      }
+    </div>
+
+    <span class="status status--{{ session.status() }}">
+      <i></i>{{ statusLabel() }}
+    </span>
+  </header>
+
+  <nav class="mobile-tabs">
+    <button type="button" [class.on]="mobileTab() === 'call'" (click)="mobileTab.set('call')">
+      <app-icon name="cam" [size]="18" /> Chamada
+    </button>
+    <button type="button" [class.on]="mobileTab() === 'chat'" (click)="mobileTab.set('chat')">
+      <app-icon name="chat" [size]="18" /> Chat
+    </button>
+  </nav>
+
+  <main class="room" [attr.data-tab]="mobileTab()">
+    <section class="stage">
+      @if (call.inCall()) {
+        <div [class]="gridClass()">
+          <app-video-tile
+            [stream]="call.localStream()"
+            [name]="user()?.displayName ?? 'Você'"
+            [color]="user()?.avatarColor ?? '#ff2e88'"
+            [local]="true"
+            [screen]="call.screenSharing()"
+            [speaking]="call.speaking().has(localKey)"
+            [audioOn]="call.media().audio"
+            [videoOn]="call.media().video || call.screenSharing()"
+          />
+          @for (tile of tiles(); track tile.peer.peerId) {
+            <app-video-tile
+              [stream]="tile.stream"
+              [name]="tile.peer.displayName"
+              [color]="tile.peer.avatarColor"
+              [speaking]="tile.speaking"
+              [audioOn]="tile.peer.media.audio"
+              [videoOn]="tile.peer.media.video"
+            />
+          }
+        </div>
+
+        <div class="reactions" aria-hidden="true">
+          @for (reaction of call.reactions(); track reaction.id) {
+            <span class="float" [style.left.%]="reaction.left">{{ reaction.emoji }}</span>
+          }
+        </div>
+
+        @if (captionList().length > 0) {
+          <div class="captions" aria-live="polite">
+            @for (caption of captionList(); track caption.peerId) {
+              <p [class.interim]="!caption.final">
+                <strong>{{ caption.displayName }}</strong> {{ caption.text }}
+              </p>
+            }
+          </div>
+        }
+
+        <div class="dock">
+          <button
+            [appBtn]="call.media().audio ? 'cyan' : 'ghost'"
+            size="icon"
+            type="button"
+            [confetti]="false"
+            [attr.aria-pressed]="call.media().audio"
+            [attr.aria-label]="call.media().audio ? 'Silenciar microfone' : 'Ativar microfone'"
+            (click)="call.toggleAudio()"
+          >
+            <app-icon [name]="call.media().audio ? 'mic' : 'micOff'" />
+          </button>
+          <button
+            [appBtn]="call.media().video ? 'lime' : 'ghost'"
+            size="icon"
+            type="button"
+            [confetti]="false"
+            [disabled]="!call.hasCamera()"
+            [attr.aria-pressed]="call.media().video"
+            [attr.aria-label]="call.media().video ? 'Desligar câmera' : 'Ligar câmera'"
+            (click)="call.toggleVideo()"
+          >
+            <app-icon [name]="call.media().video ? 'cam' : 'camOff'" />
+          </button>
+          <button
+            [appBtn]="call.screenSharing() ? 'orange' : 'ghost'"
+            size="icon"
+            type="button"
+            [confetti]="false"
+            [attr.aria-pressed]="call.screenSharing()"
+            aria-label="Compartilhar tela"
+            (click)="call.toggleScreenShare()"
+          >
+            <app-icon name="screen" />
+          </button>
+          @if (call.captionsSupported) {
+            <button
+              [appBtn]="call.captionsOn() ? 'violet' : 'ghost'"
+              size="icon"
+              type="button"
+              [confetti]="false"
+              [attr.aria-pressed]="call.captionsOn()"
+              aria-label="Legendas ao vivo"
+              (click)="call.toggleCaptions()"
+            >
+              <app-icon name="captions" />
+            </button>
+          }
+          <div class="picker">
+            <button
+              [appBtn]="pickerOpen() ? 'orange' : 'ghost'"
+              size="icon"
+              type="button"
+              [confetti]="false"
+              [attr.aria-expanded]="pickerOpen()"
+              aria-label="Reações"
+              (click)="pickerOpen.set(!pickerOpen())"
+            >
+              <app-icon name="smile" />
+            </button>
+            @if (pickerOpen()) {
+              <div class="picker__menu" role="menu">
+                @for (emoji of reactions; track emoji) {
+                  <button type="button" role="menuitem" (click)="sendReaction(emoji)">{{ emoji }}</button>
+                }
+              </div>
+            }
+          </div>
+          <button appBtn="danger" size="icon" type="button" aria-label="Sair da chamada" (click)="call.leave()">
+            <app-icon name="hangup" />
+          </button>
+        </div>
+      } @else {
+        <div class="lobby card">
+          <div class="lobby__orbit" aria-hidden="true">
+            <span>🎙️</span><span>📹</span><span>💬</span>
+          </div>
+          <h2>Chamada da sala</h2>
+          @if (session.callPeers().length > 0) {
+            <p>{{ session.callPeers().length }} pessoa(s) já estão falando agora:</p>
+            <div class="lobby__people">
+              @for (peer of session.callPeers(); track peer.peerId) {
+                <span class="person">
+                  <app-avatar [name]="peer.displayName" [color]="peer.avatarColor" [size]="30" />
+                  {{ peer.displayName }}
+                </span>
+              }
+            </div>
+          } @else {
+            <p>Ninguém na chamada ainda. Comece e o pessoal da sala vê na hora.</p>
+          }
+          <button
+            appBtn="lime"
+            size="lg"
+            type="button"
+            [disabled]="call.joining() || session.status() !== 'open'"
+            (click)="call.join()"
+          >
+            <app-icon name="phone" />
+            {{ call.joining() ? 'Abrindo câmera…' : 'Entrar com voz e vídeo' }}
+          </button>
+          <small>Dica: ative as <strong>legendas ao vivo</strong> e todos leem o que você fala.</small>
+        </div>
+      }
+    </section>
+
+    <app-chat-panel class="chat" />
+  </main>
+}

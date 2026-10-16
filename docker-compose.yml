@@ -1,0 +1,68 @@
+name: conecta
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-conecta}
+      POSTGRES_USER: ${POSTGRES_USER:-conecta}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-conecta-dev-password}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    build: ./backend
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://conecta:conecta-dev-password@db:5432/conecta}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+  # Servidor TURN opcional, necessário quando os participantes estão atrás de NAT restritivo.
+  # Suba com: docker compose --profile turn up
+  turn:
+    image: coturn/coturn:4.7
+    profiles: ["turn"]
+    network_mode: host
+    command:
+      - -n
+      - --lt-cred-mech
+      - --fingerprint
+      - --realm=conecta
+      - --user=${TURN_USERNAME:-conecta}:${TURN_CREDENTIAL:-troque-esta-senha}
+      - --listening-port=3478
+      - --min-port=49160
+      - --max-port=49200
+
+volumes:
+  pgdata:

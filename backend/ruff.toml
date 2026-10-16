@@ -1,0 +1,10 @@
+line-length = 120
+target-version = "py313"
+extend-exclude = ["*/migrations/*"]
+
+[lint]
+select = ["E", "F", "I", "B", "UP", "N"]
+ignore = ["N815"]
+
+[lint.per-file-ignores]
+"config/asgi.py" = ["E402"]

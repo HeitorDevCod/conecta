@@ -1,0 +1,65 @@
+<main class="auth">
+  <section class="hero">
+    <span class="badge"><app-icon name="sparkle" [size]="16" /> Voz · Vídeo · Texto</span>
+    <h1>
+      Conversas que
+      <span class="hl hl--pink">acendem</span>
+      ideias <span class="hl hl--cyan">ao vivo</span>.
+    </h1>
+    <p class="lead">
+      Crie uma sala, chame seu time e alterne entre texto, voz e vídeo sem trocar de aba.
+      Com legendas automáticas e reações que voam pela tela.
+    </p>
+    <ul class="chips">
+      @for (feature of features; track feature.label) {
+        <li [style.--chip]="feature.color">
+          <app-icon [name]="feature.icon" [size]="18" />
+          {{ feature.label }}
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="card panel">
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" [attr.aria-selected]="!isRegister()" (click)="switchMode('login')">
+        Entrar
+      </button>
+      <button type="button" role="tab" [attr.aria-selected]="isRegister()" (click)="switchMode('register')">
+        Criar conta
+      </button>
+      <span class="tabs__pill" [class.right]="isRegister()"></span>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (isRegister()) {
+        <label class="field">
+          <span>Como quer ser chamado</span>
+          <input class="input" formControlName="displayName" autocomplete="nickname" placeholder="Ex.: Heitor" />
+        </label>
+      }
+      <label class="field">
+        <span>E-mail</span>
+        <input class="input" type="email" formControlName="email" autocomplete="email" placeholder="voce@email.com" />
+      </label>
+      <label class="field">
+        <span>Senha</span>
+        <input
+          class="input"
+          type="password"
+          formControlName="password"
+          [attr.autocomplete]="isRegister() ? 'new-password' : 'current-password'"
+          placeholder="mínimo 8 caracteres"
+        />
+      </label>
+
+      @if (error(); as message) {
+        <p class="error" role="alert">{{ message }}</p>
+      }
+
+      <button appBtn="lime" size="lg" type="submit" [disabled]="busy()">
+        {{ busy() ? 'Só um instante…' : isRegister() ? 'Criar minha conta' : 'Entrar agora' }}
+      </button>
+    </form>
+  </section>
+</main>

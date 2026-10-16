@@ -1,0 +1,60 @@
+<header class="head">
+  <h2><app-icon name="chat" [size]="20" /> Chat</h2>
+</header>
+
+<div class="scroller" #scroller (scroll)="onScroll()">
+  @if (session.hasMore()) {
+    <button
+      appBtn="ghost"
+      size="sm"
+      type="button"
+      class="older"
+      [confetti]="false"
+      [disabled]="session.loadingMore()"
+      (click)="session.loadOlder()"
+    >
+      {{ session.loadingMore() ? 'Carregando…' : 'Mensagens anteriores' }}
+    </button>
+  }
+
+  @for (group of groups(); track group.key) {
+    <article class="group" [class.mine]="group.mine">
+      @if (!group.mine) {
+        <app-avatar [name]="group.authorName" [color]="group.authorColor" [size]="32" />
+      }
+      <div class="bubbles">
+        <header>
+          <strong [style.color]="group.mine ? 'var(--cyan)' : group.authorColor">
+            {{ group.mine ? 'Você' : group.authorName }}
+          </strong>
+          <time>{{ group.messages[0]?.createdAt | date: 'HH:mm' }}</time>
+        </header>
+        @for (message of group.messages; track message.id) {
+          <p class="bubble">{{ message.content }}</p>
+        }
+      </div>
+    </article>
+  } @empty {
+    <div class="empty">
+      <span>👋</span>
+      <p>Ninguém falou nada ainda.<br />Quebre o gelo!</p>
+    </div>
+  }
+</div>
+
+<p class="typing" aria-live="polite">{{ session.typingLabel() }}</p>
+
+<form class="composer" (submit)="$event.preventDefault(); send(box)">
+  <textarea
+    #box
+    rows="1"
+    maxlength="2000"
+    placeholder="Escreva uma mensagem…"
+    aria-label="Mensagem"
+    (input)="onInput($event)"
+    (keydown)="onKeydown($event, box)"
+  ></textarea>
+  <button appBtn="cyan" size="icon" type="submit" [disabled]="!canSend()" aria-label="Enviar">
+    <app-icon name="send" [size]="20" />
+  </button>
+</form>
