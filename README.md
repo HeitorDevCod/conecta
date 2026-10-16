@@ -10,6 +10,9 @@ indicador de quem está falando, reações que voam pela tela e compartilhamento
 ![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis&logoColor=white)
 ![WebRTC](https://img.shields.io/badge/WebRTC-mesh-333333?logo=webrtc&logoColor=white)
 
+> 📖 Quer entender as decisões técnicas e os desafios do projeto? Leia
+> [**Sobre o projeto**](docs/SOBRE-O-PROJETO.md).
+
 ## ✨ Destaques
 
 | Recurso | Como funciona |
