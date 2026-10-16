@@ -124,6 +124,19 @@ form {
   }
 }
 
+.forgot {
+  justify-self: end;
+  margin-block-start: -6px;
+  color: var(--cyan);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .error {
   margin: 0;
   padding: 10px 14px;

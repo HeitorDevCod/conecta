@@ -50,6 +50,7 @@
   display: grid;
   grid-template-columns: 1fr 340px;
   grid-template-areas:
+    'verify verify'
     'intro create'
     'grid create';
   align-items: start;
@@ -60,8 +61,22 @@
 
   @media (max-width: 960px) {
     grid-template-columns: 1fr;
-    grid-template-areas: 'intro' 'create' 'grid';
+    grid-template-areas: 'verify' 'intro' 'create' 'grid';
   }
+}
+
+.verify {
+  grid-area: verify;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.locked {
+  margin: -4px 0 0;
+  font-size: 13px;
+  color: var(--yellow);
 }
 
 .intro {

@@ -1,0 +1,9 @@
+{% autoescape off %}
+Olá, {{ user.display_name }}!
+
+Confirme seu e-mail para criar salas, conversar no chat e entrar nas chamadas do Conecta:
+
+{{ link }}
+
+O link vale por {{ hours }} horas. Se você não criou uma conta no Conecta, ignore esta mensagem.
+{% endautoescape %}

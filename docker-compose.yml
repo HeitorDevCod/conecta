@@ -33,6 +33,9 @@ services:
       DATABASE_URL: ${DATABASE_URL:-postgres://conecta:conecta-dev-password@db:5432/conecta}
       REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,backend}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+      EMAIL_HOST: ${EMAIL_HOST:-mailpit}
+      EMAIL_PORT: ${EMAIL_PORT:-1025}
     depends_on:
       db:
         condition: service_healthy
@@ -40,6 +43,12 @@ services:
         condition: service_healthy
     ports:
       - "8000:8000"
+
+  # Caixa de entrada de desenvolvimento: todos os e-mails enviados aparecem em http://localhost:8025
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025"
 
   frontend:
     build: ./frontend

@@ -115,7 +115,7 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "30/min", "user": "300/min"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "30/min", "user": "300/min", "auth_email": "8/hour"},
 }
 
 SIMPLE_JWT = {
@@ -124,6 +124,26 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
     "UPDATE_LAST_LOGIN": True,
 }
+
+# ---------------------------------------------------------------- Contas e e-mail
+# Endereço público do frontend, usado nos links enviados por e-mail.
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:4200").rstrip("/")
+
+# Sem e-mail confirmado a pessoa entra no site, mas não cria salas, não conversa e não liga.
+REQUIRE_EMAIL_VERIFICATION = env_bool("REQUIRE_EMAIL_VERIFICATION", True)
+EMAIL_VERIFICATION_MAX_AGE = 60 * 60 * 72  # link de confirmação vale 3 dias
+PASSWORD_RESET_TIMEOUT = 60 * 60 * 2  # link de redefinição vale 2 horas
+
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", False)
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.smtp.EmailBackend" if EMAIL_HOST else "django.core.mail.backends.console.EmailBackend",
+)
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Conecta <nao-responda@conecta.local>")
 
 # ---------------------------------------------------------------- CORS
 CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS", "http://localhost:4200")

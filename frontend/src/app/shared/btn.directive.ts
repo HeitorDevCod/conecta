@@ -1,6 +1,6 @@
 import { Directive, ElementRef, inject, input } from '@angular/core';
 
-export type BtnVariant = 'pink' | 'cyan' | 'lime' | 'orange' | 'violet' | 'ghost' | 'danger';
+export type BtnVariant = 'pink' | 'cyan' | 'lime' | 'orange' | 'violet' | 'yellow' | 'ghost' | 'danger';
 export type BtnSize = 'sm' | 'md' | 'lg' | 'icon';
 
 const BURST_COLORS = ['#ff2e88', '#00e5ff', '#b6ff00', '#ffd60a', '#8b5cf6', '#ff8a00'] as const;

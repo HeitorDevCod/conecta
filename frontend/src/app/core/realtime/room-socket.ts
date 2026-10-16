@@ -5,7 +5,8 @@ import { AuthService } from '../auth/auth.service';
 import { ClientEvent, ConnectionStatus, ServerEvent } from '../models';
 
 const CLOSE_UNAUTHORIZED = 4401;
-const FATAL_CLOSE_CODES = new Set([4403, 4404]);
+/** 4403 sem acesso · 4404 sala inexistente · 4412 e-mail não confirmado */
+const FATAL_CLOSE_CODES = new Set([4403, 4404, 4412]);
 const MAX_BACKOFF_MS = 10_000;
 
 function socketUrl(slug: string, token: string): string {

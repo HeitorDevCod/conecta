@@ -6,6 +6,17 @@ export interface User {
   readonly email: string;
   readonly displayName: string;
   readonly avatarColor: string;
+  readonly emailVerified: boolean;
+}
+
+export interface DetailResponse {
+  readonly detail: string;
+}
+
+export interface PasswordResetConfirmPayload {
+  readonly uid: string;
+  readonly token: string;
+  readonly password: string;
 }
 
 export interface AuthTokens {

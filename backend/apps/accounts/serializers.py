@@ -3,17 +3,47 @@ from django.contrib.auth.password_validation import validate_password
 from django.utils.text import slugify
 from rest_framework import serializers
 
+from .tokens import read_reset_params
+
 User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    displayName = serializers.CharField(source="display_name")
+    displayName = serializers.CharField(source="display_name", min_length=2, max_length=40)
     avatarColor = serializers.CharField(source="avatar_color", read_only=True)
+    emailVerified = serializers.BooleanField(source="email_verified", read_only=True)
 
     class Meta:
         model = User
-        fields = ("id", "email", "displayName", "avatarColor")
+        fields = ("id", "email", "displayName", "avatarColor", "emailVerified")
         read_only_fields = ("id", "email")
+
+
+class VerifyEmailSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=512)
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value: str) -> str:
+        return value.strip().lower()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    uid = serializers.CharField(max_length=64)
+    token = serializers.CharField(max_length=128)
+    password = serializers.CharField(write_only=True, min_length=8, max_length=128)
+
+    def validate(self, attrs: dict) -> dict:
+        user = read_reset_params(attrs["uid"], attrs["token"])
+        if user is None:
+            raise serializers.ValidationError(
+                {"token": "Este link é inválido ou já expirou. Peça um novo para redefinir sua senha."}
+            )
+        validate_password(attrs["password"], user=user)
+        attrs["user"] = user
+        return attrs
 
 
 class RegisterSerializer(serializers.Serializer):

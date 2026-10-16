@@ -15,9 +15,13 @@ User = get_user_model()
 application = JWTAuthMiddleware(URLRouter(websocket_urlpatterns))
 
 
-def make_user(name: str):
+def make_user(name: str, verified: bool = True):
     return User.objects.create_user(
-        username=name, email=f"{name}@example.com", display_name=name.title(), password="senha-forte-123"
+        username=name,
+        email=f"{name}@example.com",
+        display_name=name.title(),
+        password="senha-forte-123",
+        email_verified=verified,
     )
 
 
@@ -58,6 +62,16 @@ def test_messages_require_membership() -> None:
     assert client.get("/api/rooms/geral/messages/").status_code == 403
     assert client.post("/api/rooms/geral/join/").status_code == 200
     assert client.get("/api/rooms/geral/messages/").status_code == 200
+
+
+@pytest.mark.django_db
+def test_unverified_user_can_list_but_not_create_rooms() -> None:
+    client = APIClient()
+    client.force_authenticate(make_user("dani", verified=False))
+    assert client.get("/api/rooms/").status_code == 200
+    response = client.post("/api/rooms/", {"name": "Nova sala"}, format="json")
+    assert response.status_code == 403
+    assert "Confirme seu e-mail" in response.json()["detail"]
 
 
 @pytest.mark.django_db
@@ -102,6 +116,22 @@ async def test_websocket_rejects_anonymous() -> None:
     connected, code = await communicator.connect()
     assert not connected
     assert code == 4401
+
+
+@pytest.mark.django_db(transaction=True)
+async def test_websocket_rejects_unverified_email() -> None:
+    await setup_room()
+
+    @database_sync_to_async
+    def unverified_token() -> str:
+        user = make_user("caio", verified=False)
+        Room.objects.get(slug="geral").members.add(user)
+        return str(AccessToken.for_user(user))
+
+    communicator = WebsocketCommunicator(application, f"/ws/rooms/geral/?token={await unverified_token()}")
+    connected, code = await communicator.connect()
+    assert not connected
+    assert code == 4412
 
 
 @pytest.mark.django_db(transaction=True)

@@ -10,13 +10,14 @@ import { ToastService } from '../../core/toast.service';
 import { AvatarComponent } from '../../shared/avatar.component';
 import { BtnDirective } from '../../shared/btn.directive';
 import { IconComponent } from '../../shared/icon.component';
+import { VerifyBannerComponent } from '../../shared/verify-banner.component';
 
 export const ROOM_COLORS = ['#ff2e88', '#00e5ff', '#b6ff00', '#ff8a00', '#8b5cf6', '#ffd60a'] as const;
 
 @Component({
   selector: 'app-rooms-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ReactiveFormsModule, RouterLink, AvatarComponent, BtnDirective, IconComponent],
+  imports: [ReactiveFormsModule, RouterLink, AvatarComponent, BtnDirective, IconComponent, VerifyBannerComponent],
   templateUrl: './rooms-page.html',
   styleUrl: './rooms-page.scss',
 })

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Conecta{% endblock %}</title>
+  </head>
+  <body style="margin:0;padding:0;background:#0d0820;font-family:Arial,Helvetica,sans-serif;color:#f7f3ff;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d0820;padding:32px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+            <tr>
+              <td style="padding:0 0 20px 4px;font-size:24px;font-weight:800;letter-spacing:-1px;color:#f7f3ff;">
+                <span style="display:inline-block;width:30px;height:30px;line-height:30px;text-align:center;border-radius:10px;background:#ff2e88;color:#120a26;font-size:18px;vertical-align:middle;">✦</span>
+                <span style="vertical-align:middle;">&nbsp;conecta</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="background:#1b1238;border:3px solid #120a26;border-top:10px solid {% block accent %}#00e5ff{% endblock %};border-radius:24px;padding:32px 28px;">
+                {% block content %}{% endblock %}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:20px 8px 0;font-size:12px;line-height:18px;color:#8f84b8;">
+                Você recebeu esta mensagem porque este endereço foi usado no Conecta.
+                Se não foi você, pode ignorar este e-mail com segurança.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

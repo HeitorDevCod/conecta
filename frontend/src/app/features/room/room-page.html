@@ -1,4 +1,12 @@
-@if (session.loadError(); as error) {
+@if (auth.needsEmailVerification()) {
+  <main class="failure gate card">
+    <span class="failure__emoji">✉️</span>
+    <h1>Falta confirmar seu e-mail</h1>
+    <p>Para entrar nas salas, conversar e ligar, abra o link que enviamos para {{ user()?.email }}.</p>
+    <app-verify-banner />
+    <a appBtn="ghost" routerLink="/salas" [confetti]="false">Voltar para as salas</a>
+  </main>
+} @else if (session.loadError(); as error) {
   <main class="failure card">
     <span class="failure__emoji">🛸</span>
     <h1>Ops, sala fora de órbita.</h1>

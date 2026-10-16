@@ -15,6 +15,7 @@
 </header>
 
 <main class="layout">
+  <app-verify-banner class="verify" />
   <section class="intro">
     <h1>Escolha uma <span class="hl">sala</span><br />e comece a falar.</h1>
     <input
@@ -45,10 +46,13 @@
         </label>
       }
     </fieldset>
-    <button appBtn="pink" type="submit" [disabled]="creating()">
+    <button appBtn="pink" type="submit" [disabled]="creating() || auth.needsEmailVerification()">
       <app-icon name="sparkle" [size]="18" />
       {{ creating() ? 'Criando…' : 'Criar e entrar' }}
     </button>
+    @if (auth.needsEmailVerification()) {
+      <p class="locked">Confirme seu e-mail para criar salas.</p>
+    }
   </form>
 
   <section class="grid" aria-live="polite">

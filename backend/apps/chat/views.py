@@ -5,9 +5,12 @@ from django.db.models import Count, Exists, OuterRef
 from django.shortcuts import get_object_or_404
 from django.utils.dateparse import parse_datetime
 from rest_framework import mixins, status, viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.request import Request
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+
+from apps.accounts.permissions import IsEmailVerified
 
 from .models import Message, Room
 from .serializers import MessageSerializer, RoomSerializer
@@ -23,6 +26,12 @@ class RoomViewSet(
 ):
     serializer_class = RoomSerializer
     lookup_field = "slug"
+
+    def get_permissions(self):
+        # Ver a lista de salas é livre; criar, entrar e ler mensagens exige e-mail confirmado.
+        if self.action in ("list", "retrieve", "leave"):
+            return [IsAuthenticated()]
+        return [IsAuthenticated(), IsEmailVerified()]
 
     def get_queryset(self):
         membership = Room.members.through.objects.filter(room_id=OuterRef("pk"), user_id=self.request.user.pk)
@@ -77,6 +86,7 @@ class RoomViewSet(
 
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated, IsEmailVerified])
 def rtc_config(_request: Request) -> Response:
     """Servidores ICE usados pelo navegador para estabelecer as conexões WebRTC."""
     ice_servers: list[dict] = []

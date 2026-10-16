@@ -52,6 +52,9 @@
           placeholder="mínimo 8 caracteres"
         />
       </label>
+      @if (!isRegister()) {
+        <a class="forgot" routerLink="/esqueci-senha">Esqueci minha senha</a>
+      }
 
       @if (error(); as message) {
         <p class="error" role="alert">{{ message }}</p>

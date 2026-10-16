@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { AuthService } from '../../core/auth/auth.service';
@@ -9,6 +9,7 @@ import { RoomSocket } from '../../core/realtime/room-socket';
 import { AvatarComponent } from '../../shared/avatar.component';
 import { BtnDirective } from '../../shared/btn.directive';
 import { IconComponent } from '../../shared/icon.component';
+import { VerifyBannerComponent } from '../../shared/verify-banner.component';
 import { ChatPanel } from './chat-panel';
 import { VideoTile } from './video-tile';
 
@@ -23,18 +24,20 @@ const STATUS_LABEL: Record<ConnectionStatus, string> = {
 @Component({
   selector: 'app-room-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, AvatarComponent, BtnDirective, IconComponent, ChatPanel, VideoTile],
+  imports: [RouterLink, AvatarComponent, BtnDirective, IconComponent, ChatPanel, VideoTile, VerifyBannerComponent],
   providers: [RoomSocket, CallService, RoomSession],
   templateUrl: './room-page.html',
   styleUrl: './room-page.scss',
 })
-export class RoomPage implements OnInit {
+export class RoomPage {
   /** Vem da rota (withComponentInputBinding). */
   readonly slug = input.required<string>();
 
   protected readonly session = inject(RoomSession);
   protected readonly call = inject(CallService);
-  protected readonly user = inject(AuthService).user;
+  protected readonly auth = inject(AuthService);
+  protected readonly user = this.auth.user;
+  private opened = false;
 
   protected readonly reactions = REACTIONS;
   protected readonly localKey = LOCAL_KEY;
@@ -57,8 +60,15 @@ export class RoomPage implements OnInit {
 
   protected readonly captionList = computed(() => [...this.call.captions().values()]);
 
-  ngOnInit(): void {
-    void this.session.open(this.slug());
+  constructor() {
+    // Abre a sala assim que o e-mail estiver confirmado (inclusive se for confirmado com a página aberta).
+    effect(() => {
+      if (this.user()?.emailVerified && !this.opened) {
+        this.opened = true;
+        const slug = this.slug();
+        untracked(() => void this.session.open(slug));
+      }
+    });
   }
 
   protected sendReaction(emoji: Reaction): void {

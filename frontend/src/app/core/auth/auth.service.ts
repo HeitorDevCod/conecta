@@ -3,7 +3,15 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, catchError, finalize, firstValueFrom, map, of, shareReplay, switchMap, tap } from 'rxjs';
 
-import { AuthResponse, AuthTokens, LoginPayload, RegisterPayload, User } from '../models';
+import {
+  AuthResponse,
+  AuthTokens,
+  DetailResponse,
+  LoginPayload,
+  PasswordResetConfirmPayload,
+  RegisterPayload,
+  User,
+} from '../models';
 import { TokenStorage } from './token-storage';
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +25,7 @@ export class AuthService {
 
   readonly user = this.userState.asReadonly();
   readonly isAuthenticated = computed(() => this.userState() !== null);
+  readonly needsEmailVerification = computed(() => this.userState()?.emailVerified === false);
 
   get accessToken(): string | null {
     return this.tokens.access;
@@ -51,6 +60,36 @@ export class AuthService {
       }),
       map((response) => response.user),
     );
+  }
+
+  // ------------------------------------------------------------ e-mail e senha
+
+  verifyEmail(token: string): Observable<DetailResponse> {
+    return this.http.post<DetailResponse>('/api/auth/verify-email/', { token }).pipe(
+      tap(() => {
+        const user = this.userState();
+        if (user) {
+          this.userState.set({ ...user, emailVerified: true });
+        }
+      }),
+    );
+  }
+
+  resendVerification(): Observable<DetailResponse> {
+    return this.http.post<DetailResponse>('/api/auth/verify-email/resend/', {});
+  }
+
+  requestPasswordReset(email: string): Observable<DetailResponse> {
+    return this.http.post<DetailResponse>('/api/auth/password-reset/', { email });
+  }
+
+  confirmPasswordReset(payload: PasswordResetConfirmPayload): Observable<DetailResponse> {
+    return this.http.post<DetailResponse>('/api/auth/password-reset/confirm/', payload);
+  }
+
+  /** Recarrega o perfil, por exemplo depois de confirmar o e-mail em outra aba. */
+  reloadUser(): Observable<User> {
+    return this.http.get<User>('/api/auth/me/').pipe(tap((user) => this.userState.set(user)));
   }
 
   /** Renova o access token. Chamadas concorrentes compartilham a mesma requisição. */

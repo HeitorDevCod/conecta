@@ -1,0 +1,88 @@
+/* Estilo compartilhado das telas de recuperação de senha e confirmação de e-mail. */
+:host {
+  display: grid;
+  place-items: center;
+  min-block-size: 100dvh;
+  padding: 24px 16px;
+}
+
+.box {
+  inline-size: min(460px, 100%);
+  display: grid;
+  gap: 18px;
+  padding: 32px 28px;
+  border-block-start: 10px solid var(--accent, var(--cyan));
+  animation: pop-in 0.4s var(--ease-spring);
+}
+
+.emoji {
+  display: grid;
+  place-items: center;
+  inline-size: 72px;
+  block-size: 72px;
+  border-radius: 22px;
+  background: var(--accent, var(--cyan));
+  border: 2.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  font-size: 36px;
+  transform: rotate(-4deg);
+}
+
+h1 {
+  font-size: clamp(28px, 6vw, 36px);
+  font-weight: 800;
+}
+
+p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+form {
+  display: grid;
+  gap: 14px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.link {
+  color: var(--cyan);
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.error {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgb(255 46 136 / 0.15);
+  border: 2px solid var(--pink);
+  color: #ffc2dc;
+  font-weight: 500;
+}
+
+.hint {
+  font-size: 13px;
+}
+
+.meter {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+
+  span {
+    block-size: 6px;
+    border-radius: 999px;
+    background: var(--line);
+    transition: background 0.25s;
+  }
+}

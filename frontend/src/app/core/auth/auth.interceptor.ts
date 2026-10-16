@@ -4,7 +4,15 @@ import { catchError, switchMap, throwError } from 'rxjs';
 
 import { AuthService } from './auth.service';
 
-const PUBLIC_ENDPOINTS = ['/api/auth/token/', '/api/auth/register/'];
+/** Rotas que não levam token. Comparação exata: /verify-email/resend/ precisa do token. */
+const PUBLIC_ENDPOINTS = new Set([
+  '/api/auth/token/',
+  '/api/auth/token/refresh/',
+  '/api/auth/register/',
+  '/api/auth/verify-email/',
+  '/api/auth/password-reset/',
+  '/api/auth/password-reset/confirm/',
+]);
 
 function withToken(request: HttpRequest<unknown>, token: string | null): HttpRequest<unknown> {
   return token ? request.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : request;
@@ -14,7 +22,7 @@ function withToken(request: HttpRequest<unknown>, token: string | null): HttpReq
 export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<unknown>, next: HttpHandlerFn) => {
   const auth = inject(AuthService);
   const isApi = request.url.startsWith('/api/');
-  const isPublic = PUBLIC_ENDPOINTS.some((path) => request.url.startsWith(path));
+  const isPublic = PUBLIC_ENDPOINTS.has(request.url.split('?')[0] ?? request.url);
 
   if (!isApi || isPublic) {
     return next(request);
@@ -23,7 +31,7 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<unknown>
   return next(withToken(request, auth.accessToken)).pipe(
     catchError((error: unknown) => {
       const isExpired = error instanceof HttpErrorResponse && error.status === 401;
-      if (!isExpired || request.url.startsWith('/api/auth/token/refresh/')) {
+      if (!isExpired) {
         return throwError(() => error);
       }
       return auth.refreshAccessToken().pipe(

@@ -24,6 +24,7 @@ class User(AbstractUser):
     email = models.EmailField("e-mail", unique=True)
     display_name = models.CharField("nome de exibição", max_length=40)
     avatar_color = models.CharField("cor do avatar", max_length=7, default=random_avatar_color)
+    email_verified = models.BooleanField("e-mail confirmado", default=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username", "display_name"]

@@ -39,6 +39,8 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.conf import settings
 
+from apps.accounts.permissions import has_verified_email
+
 from .models import Message, Room
 from .presence import MediaState, Peer, get_presence_store
 from .serializers import MessageSerializer, clean_message_content
@@ -46,6 +48,7 @@ from .serializers import MessageSerializer, clean_message_content
 CLOSE_UNAUTHORIZED = 4401
 CLOSE_FORBIDDEN = 4403
 CLOSE_NOT_FOUND = 4404
+CLOSE_EMAIL_NOT_VERIFIED = 4412
 
 MAX_SIGNAL_BYTES = 64_000
 RATE_LIMIT_MESSAGES = 10
@@ -65,6 +68,9 @@ class RoomConsumer(AsyncJsonWebsocketConsumer):
         user = self.scope.get("user")
         if user is None or not user.is_authenticated:
             await self.close(code=CLOSE_UNAUTHORIZED)
+            return
+        if not has_verified_email(user):
+            await self.close(code=CLOSE_EMAIL_NOT_VERIFIED)
             return
 
         slug: str = self.scope["url_route"]["kwargs"]["slug"]

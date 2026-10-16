@@ -20,6 +20,7 @@ indicador de quem está falando, reações que voam pela tela e compartilhamento
 | 🟢 **Quem está falando** | Análise de volume via Web Audio API acende um anel neon no participante ativo |
 | 🚀 **Reações flutuantes** | Emojis enviados por qualquer participante sobem pela tela de todos |
 | 🖥️ **Compartilhar tela** | Troca a trilha de vídeo sem renegociar a conexão (`RTCRtpSender.replaceTrack`) |
+| ✉️ **Contas seguras** | Cadastro com e-mail e senha, confirmação de e-mail por link e recuperação de senha com link de uso único |
 | 🔁 **Resiliência** | Reconexão automática com *backoff* exponencial, renovação transparente do JWT e presença multi-aba |
 | 🎨 **Visual "neon brutal"** | Cores vivas, contornos marcados e botões com onda de toque e explosão de confete no clique |
 
@@ -54,8 +55,9 @@ cp .env.example .env
 docker compose up --build
 ```
 
-Acesse **http://localhost:8080**, crie uma conta e abra a mesma sala em duas abas (ou em outro
-dispositivo) para testar a chamada.
+Acesse **http://localhost:8080** e crie uma conta. O e-mail de confirmação chega na caixa de
+entrada de desenvolvimento em **http://localhost:8025** (Mailpit). Confirme e abra a mesma sala em
+duas abas (ou em outro dispositivo) para testar a chamada.
 
 > Câmera e microfone só funcionam em `localhost` ou HTTPS — exigência dos navegadores.
 > Para usuários em redes diferentes, ative o TURN: `docker compose --profile turn up` e preencha
@@ -83,6 +85,23 @@ cd frontend
 npm install
 npm start                    # http://localhost:4200 com proxy para /api e /ws
 ```
+
+## 🔐 Contas e e-mail
+
+| Fluxo | Como funciona |
+| --- | --- |
+| **Cadastro** | Nome, e-mail e senha (mínimo 8 caracteres, validada contra senhas comuns). A senha é guardada como hash. A conta já entra logada e recebe o e-mail de confirmação. |
+| **Login** | E-mail e senha geram um token de acesso (30 min) e um de renovação (7 dias), renovados automaticamente. |
+| **Confirmação de e-mail** | Link assinado, válido por 3 dias, que deixa de valer se o e-mail da conta mudar. Sem confirmar, a pessoa vê as salas mas não cria, não conversa e não liga. Dá para reenviar o link pelo site. |
+| **Recuperação de senha** | "Esqueci minha senha" envia um link válido por 2 horas e de uso único. A resposta é a mesma exista ou não a conta, para não revelar quem está cadastrado. |
+| **Proteção contra abuso** | Envios de e-mail limitados por pessoa/IP; tentativas de login limitadas. |
+
+Endpoints: `POST /api/auth/register/`, `token/`, `token/refresh/`, `verify-email/`,
+`verify-email/resend/`, `password-reset/`, `password-reset/confirm/` e `GET /api/auth/me/`.
+
+Para enviar e-mails de verdade em produção, preencha `EMAIL_HOST`, `EMAIL_PORT`,
+`EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` e `EMAIL_USE_TLS` com o SMTP do seu provedor e ajuste
+`FRONTEND_URL` para o endereço público do site.
 
 ## 🧪 Testes e qualidade
 
@@ -122,12 +141,12 @@ compilador garante que cada evento é tratado com o formato certo.
 ```
 backend/
   config/            settings, ASGI (HTTP + WebSocket), URLs
-  apps/accounts/     usuário customizado (login por e-mail), registro, /me
+  apps/accounts/     usuário (login por e-mail), cadastro, confirmação de e-mail, recuperação de senha
   apps/chat/         salas, mensagens, consumer WebSocket, presença, middleware JWT
 frontend/
   src/app/core/      modelos, auth (JWT + interceptor), API, socket, WebRTC
   src/app/shared/    botão personalizado, ícones, avatar, toasts
-  src/app/features/  entrar, salas, sala (palco da chamada + chat)
+  src/app/features/  entrar, esqueci/redefinir senha, confirmar e-mail, salas, sala (chamada + chat)
 ```
 
 ## 🛣️ Próximos passos
