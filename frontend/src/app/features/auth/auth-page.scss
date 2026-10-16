@@ -1,10 +1,10 @@
 .auth {
   min-block-size: 100dvh;
   display: grid;
-  grid-template-columns: 1.2fr minmax(320px, 440px);
+  grid-template-columns: 1.2fr minmax(320px, 420px);
   gap: clamp(32px, 6vw, 96px);
   align-items: center;
-  padding: clamp(24px, 6vw, 80px);
+  padding: clamp(28px, 6vw, 80px) clamp(16px, 5vw, 64px);
   max-inline-size: 1240px;
   margin-inline: auto;
 
@@ -17,41 +17,37 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: var(--yellow);
-  color: var(--ink);
-  border: 2px solid var(--ink);
-  font: 700 13px/1 var(--font-display);
-  transform: rotate(-2deg);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--orange) 14%, transparent);
+  color: var(--orange);
+  font: 500 12px/1 var(--font-mono);
 }
 
 h1 {
-  margin-block: 22px 18px;
-  font-size: clamp(42px, 6.4vw, 84px);
-  font-weight: 800;
+  margin-block: 20px 16px;
+  font-size: clamp(38px, 5.6vw, 72px);
+  letter-spacing: -0.035em;
+  line-height: 1.02;
 }
 
 .hl {
-  display: inline-block;
-  padding-inline: 0.12em;
-  border-radius: 0.18em;
-  color: var(--ink);
-  transform: rotate(-1.5deg);
+  color: var(--orange);
 }
-.hl--pink { background: var(--pink); color: #fff; }
-.hl--cyan { background: var(--cyan); transform: rotate(1.5deg); }
+.hl--pink { color: var(--orange); }
+.hl--cyan { color: var(--cyan); }
 
 .lead {
-  max-inline-size: 52ch;
+  max-inline-size: 54ch;
+  margin: 0;
   color: var(--muted);
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
   padding: 0;
   margin: 28px 0 0;
   list-style: none;
@@ -60,29 +56,31 @@ h1 {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 9px 14px;
-    border-radius: 14px;
-    background: var(--surface);
-    border: 2px solid var(--chip);
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--chip) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--chip) 40%, transparent);
     color: var(--chip);
     font-weight: 600;
+    font-size: 13px;
   }
 }
 
 .panel {
   padding: 28px;
   display: grid;
-  gap: 22px;
+  gap: 20px;
+  border-block-start: 3px solid var(--orange);
 }
 
 .tabs {
   position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 5px;
-  border-radius: 999px;
-  background: var(--bg-2);
-  border: 2px solid var(--line);
+  padding: 4px;
+  border-radius: 8px;
+  background: var(--bg);
+  border: 1px solid var(--line);
 
   button {
     all: unset;
@@ -91,27 +89,31 @@ h1 {
     padding: 10px;
     text-align: center;
     cursor: pointer;
-    font: 700 14px/1 var(--font-display);
+    font: 600 13px/1 var(--font-body);
     color: var(--muted);
     transition: color 0.2s;
 
     &[aria-selected='true'] {
       color: var(--ink);
     }
+
+    &:focus-visible {
+      outline: 2px solid var(--orange);
+      border-radius: 6px;
+    }
   }
 }
 
 .tabs__pill {
   position: absolute;
-  inset: 5px auto 5px 5px;
-  inline-size: calc(50% - 5px);
-  border-radius: 999px;
-  background: var(--cyan);
-  transition: transform 0.35s var(--ease-spring);
+  inset: 4px auto 4px 4px;
+  inline-size: calc(50% - 4px);
+  border-radius: 6px;
+  background: var(--orange);
+  transition: transform 0.3s var(--ease-spring);
 
   &.right {
     transform: translateX(100%);
-    background: var(--pink);
   }
 }
 
@@ -120,7 +122,7 @@ form {
   gap: 16px;
 
   button[type='submit'] {
-    margin-block-start: 6px;
+    margin-block-start: 4px;
   }
 }
 
@@ -128,7 +130,7 @@ form {
   justify-self: end;
   margin-block-start: -6px;
   color: var(--cyan);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   text-decoration: none;
 
@@ -140,9 +142,9 @@ form {
 .error {
   margin: 0;
   padding: 10px 14px;
-  border-radius: 12px;
-  background: rgb(255 46 136 / 0.15);
-  border: 2px solid var(--pink);
-  color: #ffc2dc;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--pink) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--pink) 50%, transparent);
+  color: #ffc9d0;
   font-weight: 500;
 }

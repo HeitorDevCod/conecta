@@ -14,7 +14,8 @@ câmera e o microfone.
 - **Reações flutuantes:** emojis que sobem pela tela de todos
 - **Presença:** quem está online e quem está na chamada
 - **Contas:** cadastro com e-mail e senha, confirmação de e-mail e recuperação de senha
-- **Visual "neon brutal":** cores vivas e botões com animação de toque e confete
+- **Visual "Grafite Pro":** fundo grafite quase preto com cores vivas usadas com função (âmbar para quem fala, jade para ligado, azul-gelo para câmera e tela, lilás para legendas, coral para alertas)
+- **Atalhos de teclado na chamada:** M microfone, V câmera, S tela, C legendas, R reações
 
 ## Tecnologias
 

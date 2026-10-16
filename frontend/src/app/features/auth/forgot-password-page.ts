@@ -12,7 +12,7 @@ import { BtnDirective } from '../../shared/btn.directive';
   imports: [ReactiveFormsModule, RouterLink, BtnDirective],
   styleUrl: './auth-card.scss',
   template: `
-    <section class="card box" style="--accent: var(--pink)">
+    <section class="card box" style="--accent-card: var(--orange)">
       @if (sentTo(); as email) {
         <span class="emoji" aria-hidden="true">📬</span>
         <h1>Confira sua caixa de entrada</h1>
@@ -22,7 +22,7 @@ import { BtnDirective } from '../../shared/btn.directive';
         </p>
         <div class="actions">
           <a appBtn="cyan" routerLink="/entrar">Voltar para o login</a>
-          <button type="button" appBtn="ghost" size="sm" [confetti]="false" (click)="sentTo.set(null)">
+          <button type="button" appBtn="ghost" size="sm" (click)="sentTo.set(null)">
             Usar outro e-mail
           </button>
         </div>
@@ -38,7 +38,7 @@ import { BtnDirective } from '../../shared/btn.directive';
           @if (error(); as message) {
             <p class="error" role="alert">{{ message }}</p>
           }
-          <button appBtn="pink" size="lg" type="submit" [disabled]="busy()">
+          <button appBtn="orange" size="lg" type="submit" [disabled]="busy()">
             {{ busy() ? 'Enviando…' : 'Enviar link' }}
           </button>
         </form>

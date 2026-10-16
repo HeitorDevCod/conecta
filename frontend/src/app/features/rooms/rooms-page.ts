@@ -12,7 +12,7 @@ import { BtnDirective } from '../../shared/btn.directive';
 import { IconComponent } from '../../shared/icon.component';
 import { VerifyBannerComponent } from '../../shared/verify-banner.component';
 
-export const ROOM_COLORS = ['#ff2e88', '#00e5ff', '#b6ff00', '#ff8a00', '#8b5cf6', '#ffd60a'] as const;
+export const ROOM_COLORS = ['#ffa53a', '#5cc8ff', '#2ee6a6', '#ff5d73', '#b48cff', '#ff8f5a'] as const;
 
 @Component({
   selector: 'app-rooms-page',

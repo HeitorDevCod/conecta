@@ -25,7 +25,7 @@ indicador de quem está falando, reações que voam pela tela e compartilhamento
 | 🖥️ **Compartilhar tela** | Troca a trilha de vídeo sem renegociar a conexão (`RTCRtpSender.replaceTrack`) |
 | ✉️ **Contas seguras** | Cadastro com e-mail e senha, confirmação de e-mail por link e recuperação de senha com link de uso único |
 | 🔁 **Resiliência** | Reconexão automática com *backoff* exponencial, renovação transparente do JWT e presença multi-aba |
-| 🎨 **Visual "neon brutal"** | Cores vivas, contornos marcados e botões com onda de toque e explosão de confete no clique |
+| 🎨 **Visual "Grafite Pro"** | Grafite quase preto, tipografia técnica (IBM Plex) e cores vivas com função; botões com onda de toque, brilho e anel de pulso, e atalhos de teclado na chamada (M, V, S, C, R) |
 
 ## 🏗️ Arquitetura
 

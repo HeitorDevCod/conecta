@@ -3,32 +3,30 @@ import { Directive, ElementRef, inject, input } from '@angular/core';
 export type BtnVariant = 'pink' | 'cyan' | 'lime' | 'orange' | 'violet' | 'yellow' | 'ghost' | 'danger';
 export type BtnSize = 'sm' | 'md' | 'lg' | 'icon';
 
-const BURST_COLORS = ['#ff2e88', '#00e5ff', '#b6ff00', '#ffd60a', '#8b5cf6', '#ff8a00'] as const;
 const reducedMotion = (): boolean => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * Botão da marca: preenchimento vibrante, sombra sólida deslocada que "afunda"
- * ao pressionar, onda a partir do ponto de toque e explosão de confete no clique.
+ * Botão da marca (tema Grafite Pro): preenchimento sólido em cor viva, brilho
+ * na própria cor ao passar o mouse, onda a partir do ponto de toque e um anel
+ * que pulsa no clique.
  *
  * Uso: <button appBtn="cyan" size="lg">Entrar</button>
  */
 @Directive({
   selector: 'button[appBtn], a[appBtn]',
   host: {
-    class: 'btn',
-    '[class]': '"btn btn--" + (appBtn() || "pink") + " btn--" + size()',
+    '[class]': '"btn btn--" + (appBtn() || "orange") + " btn--" + size()',
     '[class.btn--active]': 'active()',
     '(pointerdown)': 'ripple($event)',
-    '(click)': 'burst($event)',
+    '(click)': 'pulse()',
   },
 })
 export class BtnDirective {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  readonly appBtn = input<BtnVariant | ''>('pink');
+  readonly appBtn = input<BtnVariant | ''>('orange');
   readonly size = input<BtnSize>('md');
   readonly active = input(false);
-  readonly confetti = input(true);
 
   protected ripple(event: Event): void {
     if (!(event instanceof PointerEvent) || reducedMotion()) return;
@@ -44,24 +42,12 @@ export class BtnDirective {
     wave.addEventListener('animationend', () => wave.remove(), { once: true });
   }
 
-  protected burst(event: Event): void {
-    if (!(event instanceof MouseEvent) || !this.confetti() || reducedMotion()) return;
-    const originX = event.clientX || this.host.nativeElement.getBoundingClientRect().left;
-    const originY = event.clientY || this.host.nativeElement.getBoundingClientRect().top;
-    const pieces = 10;
-    for (let i = 0; i < pieces; i++) {
-      const dot = document.createElement('span');
-      const angle = (Math.PI * 2 * i) / pieces + Math.random() * 0.5;
-      const distance = 28 + Math.random() * 34;
-      dot.className = 'btn-confetti';
-      dot.style.left = `${originX}px`;
-      dot.style.top = `${originY}px`;
-      dot.style.background = BURST_COLORS[i % BURST_COLORS.length] ?? '#fff';
-      dot.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
-      dot.style.setProperty('--dy', `${Math.sin(angle) * distance}px`);
-      dot.style.setProperty('--rot', `${Math.round(Math.random() * 360)}deg`);
-      document.body.appendChild(dot);
-      dot.addEventListener('animationend', () => dot.remove(), { once: true });
-    }
+  protected pulse(): void {
+    if (reducedMotion()) return;
+    const element = this.host.nativeElement;
+    element.classList.remove('btn--pulse');
+    void element.offsetWidth; // reinicia a animação em cliques seguidos
+    element.classList.add('btn--pulse');
+    element.addEventListener('animationend', () => element.classList.remove('btn--pulse'), { once: true });
   }
 }

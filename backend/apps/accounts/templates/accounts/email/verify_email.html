@@ -1,20 +1,20 @@
 {% extends "accounts/email/base.html" %}
 {% block title %}Confirme seu e-mail{% endblock %}
-{% block accent %}#b6ff00{% endblock %}
+{% block accent %}#2ee6a6{% endblock %}
 {% block content %}
-<h1 style="margin:0 0 12px;font-size:28px;line-height:32px;color:#f7f3ff;">Falta só um clique, {{ user.display_name }}!</h1>
-<p style="margin:0 0 24px;font-size:16px;line-height:24px;color:#b3a8d9;">
+<h1 style="margin:0 0 12px;font-size:28px;line-height:32px;color:#e9ecf1;">Falta só um clique, {{ user.display_name }}!</h1>
+<p style="margin:0 0 24px;font-size:16px;line-height:24px;color:#8b93a0;">
   Confirme seu e-mail para criar salas, conversar no chat e entrar nas chamadas de voz e vídeo.
 </p>
 <table role="presentation" cellpadding="0" cellspacing="0">
   <tr>
-    <td style="border-radius:999px;background:#b6ff00;border:3px solid #120a26;">
-      <a href="{{ link }}" style="display:inline-block;padding:14px 28px;font-size:16px;font-weight:700;color:#120a26;text-decoration:none;">Confirmar meu e-mail</a>
+    <td style="border-radius:7px;background:#2ee6a6;">
+      <a href="{{ link }}" style="display:inline-block;padding:14px 28px;font-size:16px;font-weight:700;color:#07080a;text-decoration:none;">Confirmar meu e-mail</a>
     </td>
   </tr>
 </table>
-<p style="margin:24px 0 0;font-size:13px;line-height:20px;color:#8f84b8;">
+<p style="margin:24px 0 0;font-size:13px;line-height:20px;color:#565d69;">
   O link vale por {{ hours }} horas. Se o botão não funcionar, copie e cole este endereço no navegador:<br />
-  <a href="{{ link }}" style="color:#00e5ff;word-break:break-all;">{{ link }}</a>
+  <a href="{{ link }}" style="color:#5cc8ff;word-break:break-all;">{{ link }}</a>
 </p>
 {% endblock %}

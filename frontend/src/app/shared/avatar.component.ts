@@ -18,25 +18,24 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
       inline-size: var(--avatar-size);
       block-size: var(--avatar-size);
       flex: none;
-      border-radius: 34%;
+      border-radius: calc(var(--avatar-size) * 0.22);
       background: var(--avatar-color);
       color: var(--ink);
-      border: 2px solid var(--ink);
-      box-shadow: 3px 3px 0 var(--ink);
-      font: 800 calc(var(--avatar-size) * 0.4) / 1 var(--font-display);
-      letter-spacing: -0.02em;
+      font: 600 calc(var(--avatar-size) * 0.36) / 1 var(--font-mono);
       user-select: none;
-      transition: box-shadow 0.2s, transform 0.2s;
+      transition: box-shadow 0.2s;
     }
     :host(.is-speaking) {
-      box-shadow: 0 0 0 3px var(--lime), 0 0 24px var(--lime);
-      transform: scale(1.04);
+      box-shadow:
+        0 0 0 2px var(--ink),
+        0 0 0 3px var(--orange),
+        0 0 16px color-mix(in srgb, var(--orange) 60%, transparent);
     }
   `,
 })
 export class AvatarComponent {
   readonly name = input.required<string>();
-  readonly color = input('#ff2e88');
+  readonly color = input('#ffa53a');
   readonly size = input(40);
   readonly speaking = input(false);
 

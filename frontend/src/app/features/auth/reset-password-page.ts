@@ -27,12 +27,12 @@ function passwordScore(value: string): number {
   imports: [ReactiveFormsModule, RouterLink, BtnDirective],
   styleUrl: './auth-card.scss',
   template: `
-    <section class="card box" style="--accent: var(--lime)">
+    <section class="card box" style="--accent-card: var(--lime)">
       <span class="emoji" aria-hidden="true">🔐</span>
       @if (!hasLink()) {
         <h1>Link incompleto</h1>
         <p>Abra o link exatamente como chegou no seu e-mail ou peça um novo.</p>
-        <a appBtn="pink" routerLink="/esqueci-senha">Pedir novo link</a>
+        <a appBtn="orange" routerLink="/esqueci-senha">Pedir novo link</a>
       } @else {
         <h1>Crie uma nova senha</h1>
         <p>Use pelo menos 8 caracteres. Misturar letras, números e símbolos deixa tudo mais seguro.</p>

@@ -20,10 +20,10 @@ import { BtnDirective } from './btn.directive';
             <span>Enviamos um link para {{ user.email }}. Até lá, você pode explorar as salas.</span>
           </div>
           <div class="actions">
-            <button appBtn="ghost" size="sm" type="button" [confetti]="false" [disabled]="checking()" (click)="check()">
+            <button appBtn="ghost" size="sm" type="button" [disabled]="checking()" (click)="check()">
               {{ checking() ? 'Verificando…' : 'Já confirmei' }}
             </button>
-            <button appBtn="yellow" size="sm" type="button" [disabled]="sending()" (click)="resend()">
+            <button appBtn="orange" size="sm" type="button" [disabled]="sending()" (click)="resend()">
               {{ sending() ? 'Enviando…' : 'Reenviar e-mail' }}
             </button>
           </div>
@@ -38,14 +38,21 @@ import { BtnDirective } from './btn.directive';
       align-items: center;
       gap: 14px 18px;
       padding: 14px 18px;
-      border-radius: 20px;
+      border-radius: var(--radius-lg);
       background: var(--surface);
-      border: 2.5px solid var(--ink);
-      border-inline-start: 10px solid var(--yellow);
-      box-shadow: 6px 6px 0 var(--yellow);
-      animation: pop-in 0.4s var(--ease-spring);
+      border: 1px solid var(--line);
+      box-shadow: inset 3px 0 0 var(--orange);
+      animation: pop-in 0.3s ease-out;
     }
-    .icon { font-size: 28px; }
+    .icon {
+      display: grid;
+      place-items: center;
+      inline-size: 40px;
+      block-size: 40px;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--orange) 15%, transparent);
+      font-size: 20px;
+    }
     .text {
       flex: 1 1 260px;
       display: grid;

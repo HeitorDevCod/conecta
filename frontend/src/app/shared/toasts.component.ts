@@ -27,16 +27,16 @@ import { ToastService } from '../core/toast.service';
       all: unset;
       cursor: pointer;
       padding: 12px 16px;
-      border-radius: 14px;
-      border: 2px solid var(--ink);
-      box-shadow: 4px 4px 0 var(--ink);
-      font-weight: 600;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgb(0 0 0 / 0.5);
+      font: 600 14px/1.4 var(--font-body);
       color: var(--ink);
-      animation: pop-in 0.35s cubic-bezier(0.2, 1.4, 0.4, 1);
+      animation: pop-in 0.3s ease-out;
     }
+    .toast:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
     .toast--info { background: var(--cyan); }
     .toast--success { background: var(--lime); }
-    .toast--error { background: var(--pink); color: #fff; }
+    .toast--error { background: var(--pink); }
   `,
 })
 export class ToastsComponent {

@@ -60,7 +60,7 @@
         <p class="error" role="alert">{{ message }}</p>
       }
 
-      <button appBtn="lime" size="lg" type="submit" [disabled]="busy()">
+      <button appBtn="orange" size="lg" type="submit" [disabled]="busy()">
         {{ busy() ? 'Só um instante…' : isRegister() ? 'Criar minha conta' : 'Entrar agora' }}
       </button>
     </form>

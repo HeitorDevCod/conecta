@@ -22,7 +22,7 @@ type State = 'checking' | 'done' | 'failed';
         </section>
       }
       @case ('done') {
-        <section class="card box" style="--accent: var(--lime)">
+        <section class="card box" style="--accent-card: var(--lime)">
           <span class="emoji" aria-hidden="true">🎉</span>
           <h1>E-mail confirmado!</h1>
           <p>Pronto. Agora você pode criar salas, conversar e entrar nas chamadas de voz e vídeo.</p>
@@ -32,17 +32,17 @@ type State = 'checking' | 'done' | 'failed';
         </section>
       }
       @case ('failed') {
-        <section class="card box" style="--accent: var(--pink)">
+        <section class="card box" style="--accent-card: var(--orange)">
           <span class="emoji" aria-hidden="true">🫠</span>
           <h1>Esse link não funcionou</h1>
           <p>{{ message() }}</p>
           <div class="actions">
             @if (auth.isAuthenticated()) {
-              <button appBtn="pink" type="button" [disabled]="resending()" (click)="resend()">
+              <button appBtn="orange" type="button" [disabled]="resending()" (click)="resend()">
                 {{ resending() ? 'Enviando…' : 'Enviar novo link' }}
               </button>
             } @else {
-              <a appBtn="pink" routerLink="/entrar">Entrar para pedir outro</a>
+              <a appBtn="orange" routerLink="/entrar">Entrar para pedir outro</a>
             }
           </div>
         </section>

@@ -7,7 +7,7 @@
     <div class="me">
       <app-avatar [name]="user.displayName" [color]="user.avatarColor" [size]="36" />
       <span class="me__name">{{ user.displayName }}</span>
-      <button appBtn="ghost" size="sm" type="button" [confetti]="false" (click)="auth.logout()">
+      <button appBtn="ghost" size="sm" type="button" (click)="auth.logout()">
         <app-icon name="logout" [size]="16" /> Sair
       </button>
     </div>
@@ -46,7 +46,7 @@
         </label>
       }
     </fieldset>
-    <button appBtn="pink" type="submit" [disabled]="creating() || auth.needsEmailVerification()">
+    <button appBtn="orange" type="submit" [disabled]="creating() || auth.needsEmailVerification()">
       <app-icon name="sparkle" [size]="18" />
       {{ creating() ? 'Criando…' : 'Criar e entrar' }}
     </button>

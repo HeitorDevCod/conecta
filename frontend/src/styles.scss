@@ -1,30 +1,41 @@
 /* ==========================================================================
-   Conecta — tema "neon brutal": cores vivas, contornos escuros e sombras sólidas.
+   Conecta: tema "Grafite Pro".
+   Grafite quase preto, tipografia técnica e cores vivas usadas com função:
+   âmbar = destaque e quem está falando · jade = ligado/saudável ·
+   azul-gelo = câmera e tela · lilás = legendas · coral = alerta.
    ========================================================================== */
 
 :root {
-  --bg: #0d0820;
-  --bg-2: #140c2e;
-  --surface: #1b1238;
-  --surface-2: #261a4d;
-  --line: #3a2b6e;
-  --text: #f7f3ff;
-  --muted: #b3a8d9;
-  --ink: #120a26;
+  --bg: #07080a;
+  --bg-2: #0b0d10;
+  --surface: #0e1013;
+  --surface-2: #12151a;
+  --surface-3: #181c22;
+  --line: #1f232a;
+  --line-strong: #2a2f37;
+  --text: #e9ecf1;
+  --text-soft: #c4cad3;
+  --muted: #8b93a0;
+  --faint: #565d69;
+  --ink: #07080a;
 
-  --pink: #ff2e88;
-  --cyan: #00e5ff;
-  --lime: #b6ff00;
-  --orange: #ff8a00;
-  --violet: #8b5cf6;
-  --yellow: #ffd60a;
-  --mint: #00f5a0;
+  /* cores vivas (nomes mantidos para compatibilidade dos componentes) */
+  --orange: #ffa53a; /* âmbar: destaque principal */
+  --lime: #2ee6a6; /* jade */
+  --cyan: #5cc8ff; /* azul-gelo */
+  --violet: #b48cff; /* lilás */
+  --pink: #ff5d73; /* coral */
+  --red: #ff4d5e;
+  --yellow: var(--orange);
+  --accent: var(--orange);
 
-  --radius: 18px;
-  --radius-lg: 28px;
-  --font-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --ease-spring: cubic-bezier(0.2, 1.4, 0.4, 1);
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --font-display: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --ease-spring: cubic-bezier(0.2, 1.2, 0.4, 1);
 
   color-scheme: dark;
 }
@@ -44,7 +55,7 @@ body {
 body {
   background: var(--bg);
   color: var(--text);
-  font: 400 15px/1.5 var(--font-body);
+  font: 400 14px/1.5 var(--font-body);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -53,8 +64,9 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
   margin: 0;
 }
 
@@ -62,24 +74,26 @@ a {
   color: var(--cyan);
 }
 
+code,
+kbd {
+  font-family: var(--font-mono);
+}
+
 ::selection {
-  background: var(--lime);
+  background: var(--accent);
   color: var(--ink);
 }
 
 :focus-visible {
-  outline: 3px solid var(--yellow);
-  outline-offset: 3px;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ---------------------------------------------------------------- botões */
 
 .btn {
-  --btn-bg: var(--pink);
+  --btn-bg: var(--accent);
   --btn-fg: var(--ink);
-  --btn-shadow: var(--ink);
-  --lift: 0px;
-  --depth: 5px;
 
   position: relative;
   isolation: isolate;
@@ -88,103 +102,102 @@ a {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 12px 22px;
-  border: 2.5px solid var(--ink);
-  border-radius: 999px;
+  padding: 11px 18px;
+  border: 1px solid var(--btn-bg);
+  border-radius: 7px;
   background: var(--btn-bg);
   color: var(--btn-fg);
-  font: 700 15px/1 var(--font-display);
-  letter-spacing: -0.01em;
+  font: 600 14px/1 var(--font-body);
   text-decoration: none;
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  box-shadow: var(--depth) var(--depth) 0 var(--btn-shadow);
-  transform: translate(calc(var(--lift) * -1), calc(var(--lift) * -1));
   transition:
-    transform 0.18s var(--ease-spring),
-    box-shadow 0.18s var(--ease-spring),
-    filter 0.2s;
-
-  /* brilho que atravessa o botão no hover */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
-    transform: translateX(-120%);
-    transition: transform 0.6s ease;
-  }
+    transform 0.12s ease,
+    box-shadow 0.2s ease,
+    filter 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
 
   &:hover:not(:disabled) {
-    --lift: 2px;
-    --depth: 7px;
-    &::before {
-      transform: translateX(120%);
-    }
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--btn-bg) 50%, transparent);
   }
 
   &:active:not(:disabled) {
-    --lift: -4px;
-    --depth: 1px;
-    transition-duration: 0.06s;
+    transform: translateY(1px);
+    filter: brightness(0.94);
+    box-shadow: inset 0 2px 0 rgb(0 0 0 / 0.35);
   }
 
   &:disabled {
     cursor: not-allowed;
-    filter: grayscale(0.7) brightness(0.7);
+    filter: grayscale(0.6) brightness(0.65);
+  }
+
+  kbd {
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgb(7 8 10 / 0.18);
+    font-size: 11px;
+    font-weight: 600;
   }
 }
 
-.btn--pink { --btn-bg: var(--pink); --btn-fg: #fff; }
+.btn--pink { --btn-bg: var(--pink); }
 .btn--cyan { --btn-bg: var(--cyan); }
 .btn--lime { --btn-bg: var(--lime); }
-.btn--orange { --btn-bg: var(--orange); }
-.btn--violet { --btn-bg: var(--violet); --btn-fg: #fff; }
-.btn--yellow { --btn-bg: var(--yellow); }
-.btn--danger { --btn-bg: #ff3b3b; --btn-fg: #fff; }
+.btn--orange,
+.btn--yellow { --btn-bg: var(--orange); }
+.btn--violet { --btn-bg: var(--violet); }
+.btn--danger { --btn-bg: var(--red); }
 .btn--ghost {
   --btn-bg: var(--surface-2);
   --btn-fg: var(--text);
-  --btn-shadow: #07030f;
-  border-color: var(--line);
+  border-color: var(--line-strong);
+
+  &:hover:not(:disabled) {
+    filter: none;
+    box-shadow: none;
+    border-color: #3a414d;
+    background: var(--surface-3);
+  }
+
+  kbd {
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--muted);
+  }
 }
 
-.btn--sm { padding: 8px 14px; font-size: 13px; --depth: 3px; }
-.btn--lg { padding: 16px 30px; font-size: 17px; }
+.btn--sm { padding: 8px 12px; font-size: 13px; }
+.btn--lg { padding: 14px 24px; font-size: 15px; }
 .btn--icon {
-  inline-size: 52px;
-  block-size: 52px;
+  inline-size: 44px;
+  block-size: 44px;
   padding: 0;
-  border-radius: 18px;
+  border-radius: 8px;
 }
 
-/* estado ligado (ex.: microfone ativo, legenda ativa) */
+/* estado ligado (microfone ativo, legenda ativa…) */
 .btn--active {
-  outline: 3px solid var(--lime);
-  outline-offset: 3px;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--btn-bg) 45%, transparent);
 }
 
+/* clique: onda a partir do toque + anel que pulsa na cor do botão */
 .btn__ripple {
   position: absolute;
   z-index: -1;
   border-radius: 50%;
-  background: rgb(255 255 255 / 0.45);
+  background: rgb(255 255 255 / 0.28);
   transform: scale(0);
   pointer-events: none;
   animation: ripple 0.6s ease-out forwards;
 }
 
-.btn-confetti {
-  position: fixed;
-  z-index: 100;
-  inline-size: 8px;
-  block-size: 8px;
-  margin: -4px 0 0 -4px;
-  border-radius: 2px;
-  pointer-events: none;
-  animation: confetti 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+.btn--pulse {
+  animation: ring 0.5s ease-out;
 }
 
 @keyframes ripple {
@@ -194,16 +207,18 @@ a {
   }
 }
 
-@keyframes confetti {
+@keyframes ring {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--btn-bg) 70%, transparent);
+  }
   to {
-    transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.3);
-    opacity: 0;
+    box-shadow: 0 0 0 12px transparent;
   }
 }
 
 @keyframes pop-in {
   from {
-    transform: scale(0.85) translateY(10px);
+    transform: translateY(6px);
     opacity: 0;
   }
 }
@@ -215,40 +230,38 @@ a {
   gap: 6px;
 
   > span {
-    font-weight: 600;
-    font-size: 13px;
-    color: var(--muted);
+    font: 500 11px/1.2 var(--font-mono);
+    color: var(--faint);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
   }
 }
 
 .input {
   inline-size: 100%;
-  padding: 13px 16px;
-  border-radius: 14px;
-  border: 2.5px solid var(--line);
-  background: var(--bg-2);
+  padding: 12px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--line-strong);
+  background: var(--bg);
   color: var(--text);
   font: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
 
   &::placeholder {
-    color: #6f6596;
+    color: var(--faint);
   }
 
   &:focus {
     outline: none;
-    border-color: var(--cyan);
-    box-shadow: 4px 4px 0 var(--cyan);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
   }
 }
 
 .card {
   background: var(--surface);
-  border: 2.5px solid var(--ink);
+  border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  box-shadow: 8px 8px 0 var(--ink);
 }
 
 .sr-only {

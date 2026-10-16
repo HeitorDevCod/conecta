@@ -65,7 +65,7 @@ export class ChatPanel {
           key: message.id,
           mine: message.author?.id === me,
           authorName: message.author?.displayName ?? 'Conta removida',
-          authorColor: message.author?.avatarColor ?? '#6f6596',
+          authorColor: message.author?.avatarColor ?? '#565d69',
           messages: [message],
         });
       }

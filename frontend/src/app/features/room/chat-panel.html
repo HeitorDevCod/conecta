@@ -1,5 +1,5 @@
 <header class="head">
-  <h2><app-icon name="chat" [size]="20" /> Chat</h2>
+  <h2><app-icon name="chat" [size]="18" /> Chat</h2>
 </header>
 
 <div class="scroller" #scroller (scroll)="onScroll()">
@@ -9,7 +9,6 @@
       size="sm"
       type="button"
       class="older"
-      [confetti]="false"
       [disabled]="session.loadingMore()"
       (click)="session.loadOlder()"
     >
@@ -19,9 +18,7 @@
 
   @for (group of groups(); track group.key) {
     <article class="group" [class.mine]="group.mine">
-      @if (!group.mine) {
-        <app-avatar [name]="group.authorName" [color]="group.authorColor" [size]="32" />
-      }
+      <app-avatar [name]="group.authorName" [color]="group.authorColor" [size]="28" />
       <div class="bubbles">
         <header>
           <strong [style.color]="group.mine ? 'var(--cyan)' : group.authorColor">
@@ -36,7 +33,7 @@
     </article>
   } @empty {
     <div class="empty">
-      <span>👋</span>
+      <span aria-hidden="true">👋</span>
       <p>Ninguém falou nada ainda.<br />Quebre o gelo!</p>
     </div>
   }
@@ -54,7 +51,7 @@
     (input)="onInput($event)"
     (keydown)="onKeydown($event, box)"
   ></textarea>
-  <button appBtn="cyan" size="icon" type="submit" [disabled]="!canSend()" aria-label="Enviar">
-    <app-icon name="send" [size]="20" />
+  <button appBtn="orange" type="submit" [disabled]="!canSend()" aria-label="Enviar (Enter)">
+    Enviar <kbd>↵</kbd>
   </button>
 </form>

@@ -15,7 +15,7 @@ import { IconComponent } from '../../shared/icon.component';
   template: `
     <video #video autoplay playsinline [muted]="local()" [class.mirror]="local() && !screen()"></video>
     <div class="placeholder">
-      <app-avatar [name]="name()" [color]="color()" [size]="84" [speaking]="speaking()" />
+      <app-avatar [name]="name()" [color]="color()" [size]="76" [speaking]="speaking()" />
     </div>
     <span class="label">
       @if (!audioOn()) {
@@ -29,15 +29,17 @@ import { IconComponent } from '../../shared/icon.component';
       position: relative;
       overflow: hidden;
       aspect-ratio: 16 / 10;
-      border-radius: 22px;
-      background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--tile-color) 35%, var(--surface)), var(--surface) 70%);
-      border: 2.5px solid var(--ink);
-      box-shadow: 6px 6px 0 var(--ink);
-      transition: box-shadow 0.25s, transform 0.25s var(--ease-spring);
+      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      transition: box-shadow 0.25s, border-color 0.25s;
     }
+    /* quem está falando: contorno âmbar com brilho */
     :host(.speaking) {
-      box-shadow: 0 0 0 4px var(--lime), 0 0 36px rgb(182 255 0 / 0.45);
-      transform: scale(1.01);
+      border-color: var(--orange);
+      box-shadow:
+        0 0 0 1px var(--orange),
+        0 0 32px color-mix(in srgb, var(--orange) 35%, transparent);
     }
     video {
       inline-size: 100%;
@@ -60,19 +62,18 @@ import { IconComponent } from '../../shared/icon.component';
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      background: rgb(13 8 32 / 0.78);
-      backdrop-filter: blur(6px);
-      border: 1.5px solid var(--tile-color);
-      font: 600 13px/1 var(--font-body);
+      padding: 5px 8px;
+      border-radius: 4px;
+      background: rgb(7 8 10 / 0.88);
+      font: 600 12px/1 var(--font-body);
     }
+    .label app-icon { color: var(--pink); }
   `,
 })
 export class VideoTile {
   readonly stream = input<MediaStream | null>(null);
   readonly name = input.required<string>();
-  readonly color = input('#ff2e88');
+  readonly color = input('#ffa53a');
   readonly local = input(false);
   readonly screen = input(false);
   readonly speaking = input(false);

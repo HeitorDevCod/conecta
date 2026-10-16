@@ -1,22 +1,22 @@
 @if (auth.needsEmailVerification()) {
   <main class="failure gate card">
-    <span class="failure__emoji">✉️</span>
+    <span class="failure__icon" aria-hidden="true">✉️</span>
     <h1>Falta confirmar seu e-mail</h1>
     <p>Para entrar nas salas, conversar e ligar, abra o link que enviamos para {{ user()?.email }}.</p>
     <app-verify-banner />
-    <a appBtn="ghost" routerLink="/salas" [confetti]="false">Voltar para as salas</a>
+    <a appBtn="ghost" routerLink="/salas">Voltar para as salas</a>
   </main>
 } @else if (session.loadError(); as error) {
   <main class="failure card">
-    <span class="failure__emoji">🛸</span>
+    <span class="failure__icon" aria-hidden="true">🛸</span>
     <h1>Ops, sala fora de órbita.</h1>
     <p>{{ error }}</p>
     <a appBtn="cyan" routerLink="/salas">Voltar para as salas</a>
   </main>
 } @else {
   @let room = session.room();
-  <header class="bar" [style.--room]="room?.color ?? 'var(--pink)'">
-    <a appBtn="ghost" size="icon" routerLink="/salas" aria-label="Voltar" [confetti]="false">
+  <header class="bar" [style.--room]="room?.color ?? 'var(--orange)'">
+    <a appBtn="ghost" size="icon" routerLink="/salas" aria-label="Voltar">
       <app-icon name="back" />
     </a>
     <div class="title">
@@ -40,6 +40,12 @@
       }
     </div>
 
+    <dl class="metrics">
+      <div><dt>topologia</dt><dd class="metric--violet">p2p mesh</dd></div>
+      <div><dt>na chamada</dt><dd class="metric--cyan">{{ inCallCount() }}</dd></div>
+      <div><dt>online</dt><dd class="metric--lime">{{ session.onlineUsers().length }}</dd></div>
+    </dl>
+
     <span class="status status--{{ session.status() }}">
       <i></i>{{ statusLabel() }}
     </span>
@@ -61,7 +67,7 @@
           <app-video-tile
             [stream]="call.localStream()"
             [name]="user()?.displayName ?? 'Você'"
-            [color]="user()?.avatarColor ?? '#ff2e88'"
+            [color]="user()?.avatarColor ?? '#ffa53a'"
             [local]="true"
             [screen]="call.screenSharing()"
             [speaking]="call.speaking().has(localKey)"
@@ -96,65 +102,63 @@
           </div>
         }
 
-        <div class="dock">
+        <div class="dock" role="toolbar" aria-label="Controles da chamada">
           <button
-            [appBtn]="call.media().audio ? 'cyan' : 'ghost'"
-            size="icon"
+            [appBtn]="call.media().audio ? 'lime' : 'ghost'"
             type="button"
-            [confetti]="false"
+            [active]="call.media().audio"
             [attr.aria-pressed]="call.media().audio"
-            [attr.aria-label]="call.media().audio ? 'Silenciar microfone' : 'Ativar microfone'"
+            [attr.aria-label]="(call.media().audio ? 'Silenciar microfone' : 'Ativar microfone') + ' (atalho M)'"
             (click)="call.toggleAudio()"
           >
-            <app-icon [name]="call.media().audio ? 'mic' : 'micOff'" />
+            <app-icon [name]="call.media().audio ? 'mic' : 'micOff'" [size]="18" />
+            <span class="lbl">Microfone</span><kbd>M</kbd>
           </button>
           <button
-            [appBtn]="call.media().video ? 'lime' : 'ghost'"
-            size="icon"
+            [appBtn]="call.media().video ? 'cyan' : 'ghost'"
             type="button"
-            [confetti]="false"
+            [active]="call.media().video"
             [disabled]="!call.hasCamera()"
             [attr.aria-pressed]="call.media().video"
-            [attr.aria-label]="call.media().video ? 'Desligar câmera' : 'Ligar câmera'"
+            [attr.aria-label]="(call.media().video ? 'Desligar câmera' : 'Ligar câmera') + ' (atalho V)'"
             (click)="call.toggleVideo()"
           >
-            <app-icon [name]="call.media().video ? 'cam' : 'camOff'" />
+            <app-icon [name]="call.media().video ? 'cam' : 'camOff'" [size]="18" />
+            <span class="lbl">Câmera</span><kbd>V</kbd>
           </button>
           <button
             [appBtn]="call.screenSharing() ? 'orange' : 'ghost'"
-            size="icon"
             type="button"
-            [confetti]="false"
+            [active]="call.screenSharing()"
             [attr.aria-pressed]="call.screenSharing()"
-            aria-label="Compartilhar tela"
+            aria-label="Compartilhar tela (atalho S)"
             (click)="call.toggleScreenShare()"
           >
-            <app-icon name="screen" />
+            <app-icon name="screen" [size]="18" />
+            <span class="lbl">Tela</span><kbd>S</kbd>
           </button>
           @if (call.captionsSupported) {
             <button
               [appBtn]="call.captionsOn() ? 'violet' : 'ghost'"
-              size="icon"
               type="button"
-              [confetti]="false"
+              [active]="call.captionsOn()"
               [attr.aria-pressed]="call.captionsOn()"
-              aria-label="Legendas ao vivo"
+              aria-label="Legendas ao vivo (atalho C)"
               (click)="call.toggleCaptions()"
             >
-              <app-icon name="captions" />
+              <app-icon name="captions" [size]="18" />
+              <span class="lbl">Legendas</span><kbd>C</kbd>
             </button>
           }
           <div class="picker">
             <button
               [appBtn]="pickerOpen() ? 'orange' : 'ghost'"
-              size="icon"
               type="button"
-              [confetti]="false"
               [attr.aria-expanded]="pickerOpen()"
-              aria-label="Reações"
+              aria-label="Reações (atalho R)"
               (click)="pickerOpen.set(!pickerOpen())"
             >
-              <app-icon name="smile" />
+              <app-icon name="smile" [size]="18" /><kbd>R</kbd>
             </button>
             @if (pickerOpen()) {
               <div class="picker__menu" role="menu">
@@ -164,14 +168,18 @@
               </div>
             }
           </div>
-          <button appBtn="danger" size="icon" type="button" aria-label="Sair da chamada" (click)="call.leave()">
-            <app-icon name="hangup" />
+          <span class="dock__divider" aria-hidden="true"></span>
+          <button appBtn="danger" type="button" aria-label="Encerrar chamada" (click)="call.leave()">
+            <app-icon name="hangup" [size]="18" />
+            <span class="lbl">Encerrar</span>
           </button>
         </div>
       } @else {
         <div class="lobby card">
-          <div class="lobby__orbit" aria-hidden="true">
-            <span>🎙️</span><span>📹</span><span>💬</span>
+          <div class="lobby__icons" aria-hidden="true">
+            <span class="lobby__icon lobby__icon--lime"><app-icon name="mic" [size]="24" /></span>
+            <span class="lobby__icon lobby__icon--cyan"><app-icon name="cam" [size]="24" /></span>
+            <span class="lobby__icon lobby__icon--violet"><app-icon name="captions" [size]="24" /></span>
           </div>
           <h2>Chamada da sala</h2>
           @if (session.callPeers().length > 0) {
@@ -188,7 +196,7 @@
             <p>Ninguém na chamada ainda. Comece e o pessoal da sala vê na hora.</p>
           }
           <button
-            appBtn="lime"
+            appBtn="orange"
             size="lg"
             type="button"
             [disabled]="call.joining() || session.status() !== 'open'"
@@ -197,7 +205,7 @@
             <app-icon name="phone" />
             {{ call.joining() ? 'Abrindo câmera…' : 'Entrar com voz e vídeo' }}
           </button>
-          <small>Dica: ative as <strong>legendas ao vivo</strong> e todos leem o que você fala.</small>
+          <small>Atalhos na chamada: <kbd>M</kbd> microfone · <kbd>V</kbd> câmera · <kbd>S</kbd> tela · <kbd>C</kbd> legendas · <kbd>R</kbd> reações</small>
         </div>
       }
     </section>

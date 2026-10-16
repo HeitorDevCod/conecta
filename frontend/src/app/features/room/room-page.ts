@@ -28,6 +28,9 @@ const STATUS_LABEL: Record<ConnectionStatus, string> = {
   providers: [RoomSocket, CallService, RoomSession],
   templateUrl: './room-page.html',
   styleUrl: './room-page.scss',
+  host: {
+    '(document:keydown)': 'onShortcut($event)',
+  },
 })
 export class RoomPage {
   /** Vem da rota (withComponentInputBinding). */
@@ -60,6 +63,9 @@ export class RoomPage {
 
   protected readonly captionList = computed(() => [...this.call.captions().values()]);
 
+  /** Participantes na chamada, contando você quando estiver dentro. */
+  protected readonly inCallCount = computed(() => this.session.callPeers().length + (this.call.inCall() ? 1 : 0));
+
   constructor() {
     // Abre a sala assim que o e-mail estiver confirmado (inclusive se for confirmado com a página aberta).
     effect(() => {
@@ -74,4 +80,43 @@ export class RoomPage {
   protected sendReaction(emoji: Reaction): void {
     this.call.react(emoji);
   }
+
+  /** Atalhos durante a chamada: M microfone · V câmera · S tela · C legendas · R reações · Esc fecha. */
+  protected onShortcut(event: Event): void {
+    if (!(event instanceof KeyboardEvent) || !this.call.inCall()) return;
+    if (event.ctrlKey || event.metaKey || event.altKey || event.repeat || isTypingTarget(event.target)) return;
+
+    switch (event.key.toLowerCase()) {
+      case 'm':
+        this.call.toggleAudio();
+        break;
+      case 'v':
+        this.call.toggleVideo();
+        break;
+      case 's':
+        void this.call.toggleScreenShare();
+        break;
+      case 'c':
+        if (this.call.captionsSupported) this.call.toggleCaptions();
+        break;
+      case 'r':
+        this.pickerOpen.update((open) => !open);
+        break;
+      case 'escape':
+        this.pickerOpen.set(false);
+        return;
+      default:
+        return;
+    }
+    event.preventDefault();
+  }
+}
+
+function isTypingTarget(target: EventTarget | null): boolean {
+  return (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target instanceof HTMLSelectElement ||
+    (target instanceof HTMLElement && target.isContentEditable)
+  );
 }

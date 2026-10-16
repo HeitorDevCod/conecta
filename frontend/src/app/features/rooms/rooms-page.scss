@@ -9,6 +9,8 @@
   justify-content: space-between;
   gap: 16px;
   padding: 18px clamp(16px, 4vw, 48px);
+  border-block-end: 1px solid var(--line);
+  margin-block-end: 20px;
 }
 
 .brand {
@@ -17,19 +19,18 @@
   gap: 10px;
   color: var(--text);
   text-decoration: none;
-  font: 800 24px/1 var(--font-display);
-  letter-spacing: -0.04em;
+  font: 700 18px/1 var(--font-display);
+  letter-spacing: -0.01em;
 
   &__mark {
     display: grid;
     place-items: center;
-    inline-size: 38px;
-    block-size: 38px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--pink), var(--cyan));
+    inline-size: 30px;
+    block-size: 30px;
+    border-radius: 7px;
+    background: var(--orange);
     color: var(--ink);
-    border: 2px solid var(--ink);
-    box-shadow: 3px 3px 0 var(--ink);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--orange) 50%, transparent);
   }
 }
 
@@ -76,7 +77,8 @@
 .locked {
   margin: -4px 0 0;
   font-size: 13px;
-  color: var(--yellow);
+  font: 12px var(--font-mono);
+  color: var(--orange);
 }
 
 .intro {
@@ -85,16 +87,13 @@
   gap: 20px;
 
   h1 {
-    font-size: clamp(34px, 5vw, 60px);
-    font-weight: 800;
+    font-size: clamp(32px, 4.4vw, 52px);
+    letter-spacing: -0.035em;
   }
 }
 
 .hl {
-  background: var(--lime);
-  color: var(--ink);
-  padding-inline: 0.12em;
-  border-radius: 0.18em;
+  color: var(--orange);
 }
 
 .search {
@@ -107,13 +106,14 @@
   inset-block-start: 20px;
   display: grid;
   gap: 16px;
-  padding: 24px;
+  padding: 22px;
+  border-block-start: 3px solid var(--orange);
 
   h2 {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 24px;
+    font-size: 18px;
   }
 }
 
@@ -126,22 +126,20 @@
 
   legend {
     margin-block-end: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--muted);
+    font: 500 11px/1.2 var(--font-mono);
+    color: var(--faint);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
   }
 }
 
 .swatch {
-  inline-size: 34px;
-  block-size: 34px;
-  border-radius: 12px;
+  inline-size: 30px;
+  block-size: 30px;
+  border-radius: 6px;
   background: var(--swatch);
-  border: 2px solid var(--ink);
   cursor: pointer;
-  transition: transform 0.2s var(--ease-spring);
+  transition: box-shadow 0.2s ease;
 
   input {
     appearance: none;
@@ -149,13 +147,12 @@
   }
 
   &:has(input:checked) {
-    transform: scale(1.15) rotate(-6deg);
-    box-shadow: 0 0 0 3px var(--bg), 0 0 0 6px var(--swatch);
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--swatch), 0 0 14px var(--swatch);
   }
 
   &:has(input:focus-visible) {
-    outline: 3px solid var(--yellow);
-    outline-offset: 4px;
+    outline: 2px solid var(--orange);
+    outline-offset: 5px;
   }
 }
 
@@ -163,7 +160,7 @@
   grid-area: grid;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 22px;
+  gap: 16px;
 }
 
 .room {
@@ -171,31 +168,37 @@
   display: grid;
   gap: 10px;
   align-content: start;
-  min-block-size: 190px;
-  padding: 22px;
+  min-block-size: 170px;
+  padding: 20px;
   border-radius: var(--radius-lg);
   background: var(--surface);
-  border: 2.5px solid var(--ink);
-  border-block-start: 10px solid var(--room);
-  box-shadow: 7px 7px 0 var(--room);
+  border: 1px solid var(--line);
+  border-block-start: 3px solid var(--room);
   color: var(--text);
   text-decoration: none;
-  animation: pop-in 0.5s var(--ease-spring) both;
-  animation-delay: calc(var(--i, 0) * 60ms);
-  transition: transform 0.2s var(--ease-spring), box-shadow 0.2s var(--ease-spring);
+  animation: pop-in 0.4s ease-out both;
+  animation-delay: calc(var(--i, 0) * 50ms);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
 
   &:hover {
-    transform: translate(-3px, -3px) rotate(-0.6deg);
-    box-shadow: 11px 11px 0 var(--room);
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px var(--room),
+      0 8px 30px color-mix(in srgb, var(--room) 20%, transparent);
   }
 
   &:active {
-    transform: translate(4px, 4px);
-    box-shadow: 2px 2px 0 var(--room);
+    transform: translateY(1px);
+    box-shadow: 0 0 0 1px var(--room);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--room);
+    outline-offset: 2px;
   }
 
   h3 {
-    font-size: 24px;
+    font-size: 19px;
   }
 
   p {
@@ -209,6 +212,7 @@
     align-items: center;
     margin-block-start: auto;
     padding-block-start: 10px;
+    font-size: 13px;
     font-weight: 600;
 
     span {
@@ -223,7 +227,7 @@
     align-items: center;
     gap: 2px;
     color: var(--room);
-    font: 700 13px/1 var(--font-display);
+    font: 500 12px/1 var(--font-mono);
   }
 
   &__cta {
@@ -231,8 +235,7 @@
   }
 
   &--skeleton {
-    border-block-start-color: var(--line);
-    box-shadow: 7px 7px 0 var(--line);
+    border-block-start-color: var(--line-strong);
     background: linear-gradient(90deg, var(--surface) 30%, var(--surface-2) 50%, var(--surface) 70%) 0 0 / 300% 100%;
     animation: shimmer 1.4s linear infinite;
   }
@@ -240,7 +243,7 @@
 
 .empty {
   color: var(--muted);
-  font-size: 17px;
+  font-size: 15px;
 }
 
 @keyframes shimmer {

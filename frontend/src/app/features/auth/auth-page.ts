@@ -37,10 +37,10 @@ export class AuthPage {
   });
 
   protected readonly features = [
-    { icon: 'chat', label: 'Chat em tempo real', color: 'var(--pink)' },
-    { icon: 'mic', label: 'Voz cristalina', color: 'var(--cyan)' },
-    { icon: 'cam', label: 'Vídeo em grupo', color: 'var(--lime)' },
-    { icon: 'captions', label: 'Legendas ao vivo', color: 'var(--yellow)' },
+    { icon: 'chat', label: 'Chat em tempo real', color: 'var(--orange)' },
+    { icon: 'mic', label: 'Voz cristalina', color: 'var(--lime)' },
+    { icon: 'cam', label: 'Vídeo em grupo', color: 'var(--cyan)' },
+    { icon: 'captions', label: 'Legendas ao vivo', color: 'var(--violet)' },
   ] as const;
 
   protected switchMode(mode: Mode): void {

@@ -11,7 +11,7 @@ class Room(models.Model):
     name = models.CharField("nome", max_length=60)
     slug = models.SlugField("slug", max_length=70, unique=True)
     description = models.CharField("descrição", max_length=200, blank=True)
-    color = models.CharField("cor", max_length=7, default="#ff2e88")
+    color = models.CharField("cor", max_length=7, default="#ffa53a")
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="rooms_created"
     )
